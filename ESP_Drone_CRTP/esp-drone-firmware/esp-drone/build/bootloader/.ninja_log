@@ -1,0 +1,201 @@
+# ninja log v5
+13	372	8017035934962325	project_elf_src_esp32s3.c	4a4d84aa10ecfdc7
+13	372	8017035934962325	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/project_elf_src_esp32s3.c	4a4d84aa10ecfdc7
+35	441	8017035936648519	esp-idf/xtensa/CMakeFiles/__idf_xtensa.dir/eri.c.obj	a4673a001c909d60
+126	520	8017035937251636	esp-idf/soc/CMakeFiles/__idf_soc.dir/lldesc.c.obj	9a80f5f6b317eb77
+135	528	8017035937008212	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32s3/gdma_periph.c.obj	e0cc17121076e0dd
+106	535	8017035937401949	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32s3/adc_periph.c.obj	bac166eec919d603
+167	546	8017035937683218	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32s3/i2c_periph.c.obj	4efe659523f5c4fb
+119	564	8017035937833057	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32s3/dedic_gpio_periph.c.obj	ec48da1378025d0a
+112	608	8017035937944340	esp-idf/soc/CMakeFiles/__idf_soc.dir/dport_access_common.c.obj	3a87301ee777540
+155	733	8017035939420123	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32s3/interrupts.c.obj	58e89139697d5ce4
+84	753	8017035938977487	esp-idf/xtensa/CMakeFiles/__idf_xtensa.dir/xt_trax.c.obj	66111f5c603980fd
+373	811	8017035940323284	CMakeFiles/bootloader.elf.dir/project_elf_src_esp32s3.c.obj	2e9c7bc3bfb798e5
+520	833	8017035940569470	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32s3/i2s_periph.c.obj	64fae6e45fc5c37a
+528	910	8017035941264187	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32s3/gpio_periph.c.obj	ee6fb1ef47e20f55
+466	928	8017035940989774	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32s3/lcd_periph.c.obj	7eac48e5611edb3f
+537	958	8017035941523085	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32s3/sdm_periph.c.obj	320b7fd12b062d24
+547	983	8017035941863815	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32s3/sdio_slave_periph.c.obj	f6758d83d7b79b21
+574	1004	8017035941979719	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32s3/mcpwm_periph.c.obj	8378427537b4c1a4
+636	1017	8017035942317439	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32s3/ledc_periph.c.obj	b396c0b986f59ae1
+754	1104	8017035943219894	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32s3/pcnt_periph.c.obj	1a4fe773202a40d1
+734	1117	8017035943373572	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32s3/rtc_io_periph.c.obj	f977259ca599d497
+834	1125	8017035943397833	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32s3/temperature_sensor_periph.c.obj	4d50a7117d3a86ac
+812	1141	8017035943516689	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32s3/rmt_periph.c.obj	4f4b1cf58c427bdb
+929	1248	8017035944787922	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32s3/spi_periph.c.obj	3cd2b155b4bbbe37
+959	1350	8017035945643066	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32s3/touch_sensor_periph.c.obj	c21770fec12b3a11
+911	1365	8017035945858537	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32s3/uart_periph.c.obj	9ee2f0f564b2647e
+1006	1425	8017035946468732	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32s3/timer_periph.c.obj	d7f89206796b07b7
+984	1538	8017035947178770	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32s3/sdmmc_periph.c.obj	e46eab55b27acb9
+1018	1707	8017035948471792	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32s3/usb_otg_periph.c.obj	ea2e25a3181f2a45
+1105	1729	8017035948307147	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32s3/usb_periph.c.obj	4e42daa9bd12bae8
+1118	1737	8017035948593144	esp-idf/hal/CMakeFiles/__idf_hal.dir/efuse_hal.c.obj	1e432ed8404ecf2b
+1142	1771	8017035949622955	esp-idf/hal/CMakeFiles/__idf_hal.dir/mpu_hal.c.obj	5320a8368ffb3805
+1249	1852	8017035950714236	esp-idf/hal/CMakeFiles/__idf_hal.dir/esp32s3/efuse_hal.c.obj	55a2171e3553c88a
+1365	2040	8017035952416359	esp-idf/hal/CMakeFiles/__idf_hal.dir/mmu_hal.c.obj	33875055d129b3a3
+1351	2061	8017035952594394	esp-idf/hal/CMakeFiles/__idf_hal.dir/cache_hal.c.obj	7c83e8ffa28041d3
+1425	2097	8017035952800285	esp-idf/esp_app_format/CMakeFiles/__idf_esp_app_format.dir/esp_app_desc.c.obj	22cc404b8323837a
+1539	2397	8017035956215052	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/src/bootloader_common.c.obj	1e407a5112ec59df
+1730	2504	8017035957203215	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/src/bootloader_random.c.obj	f380d09d57f33ebc
+1772	2524	8017035957380329	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/src/bootloader_random_esp32s3.c.obj	63b21217da11c8bb
+1708	2547	8017035957667810	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/src/bootloader_common_loader.c.obj	1229cbca7c665e8b
+1126	2562	8017035957568463	esp-idf/micro-ecc/CMakeFiles/__idf_micro-ecc.dir/uECC_verify_antifault.c.obj	cee2b922455f1e25
+1745	2570	8017035957737999	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/src/bootloader_mem.c.obj	de6a5060c8c2a9aa
+2098	2835	8017035960317860	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/src/secure_boot.c.obj	e6955a29a3bdca8f
+2041	2898	8017035960798310	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/src/flash_partitions.c.obj	fc8fd046ad8b95af
+2062	2960	8017035961377493	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/src/flash_encrypt.c.obj	46c2d331ebb061c
+1853	3033	8017035961884269	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/src/bootloader_utility.c.obj	264cf4655c96838e
+2525	3051	8017035962536928	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/src/bootloader_clock_init.c.obj	192ecd86969ba325
+2571	3257	8017035964367725	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/src/bootloader_efuse.c.obj	c856573806c28cee
+2548	3359	8017035965812581	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/bootloader_flash/src/bootloader_flash_config_esp32s3.c.obj	4326c92cf2d49376
+2563	3369	8017035965822554	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/bootloader_flash/src/flash_qio_mode.c.obj	4cb5786195b32988
+2398	3471	8017035966347460	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/src/esp_image_format.c.obj	1ecdc4c449d6bb65
+2505	3486	8017035966738403	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/bootloader_flash/src/bootloader_flash.c.obj	edeab5bb18c0dc7e
+2961	3613	8017035968348185	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/src/bootloader_clock_loader.c.obj	966714429505a5fd
+3052	3622	8017035968348185	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/src/bootloader_console_loader.c.obj	71f3de3512e43787
+2899	3631	8017035968475630	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/src/bootloader_panic.c.obj	55c4b537672cf771
+3258	3761	8017035969880066	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/src/esp32s3/bootloader_sha.c.obj	afeaecaa1dd8dbdf
+2836	3812	8017035969518739	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/src/bootloader_init.c.obj	5b525f2eda238277
+3034	3854	8017035970143729	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/src/bootloader_console.c.obj	519155544289cd89
+3360	3879	8017035970815443	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/src/esp32s3/bootloader_soc.c.obj	e727f63be6117fba
+3370	3970	8017035971863272	esp-idf/efuse/CMakeFiles/__idf_efuse.dir/esp32s3/esp_efuse_fields.c.obj	5704045f3cb7adb6
+3487	4065	8017035972669910	esp-idf/efuse/CMakeFiles/__idf_efuse.dir/esp32s3/esp_efuse_table.c.obj	f37ba5d9abc2da89
+3632	4200	8017035974267608	esp-idf/efuse/CMakeFiles/__idf_efuse.dir/esp32s3/esp_efuse_rtc_calib.c.obj	a45e0d4ea68a7596
+3472	4302	8017035975228253	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/src/esp32s3/bootloader_esp32s3.c.obj	2aada2cb31aae6f1
+3615	4335	8017035974949726	esp-idf/efuse/CMakeFiles/__idf_efuse.dir/src/esp_efuse_fields.c.obj	d65a352ee669a4f7
+3623	4343	8017035975128096	esp-idf/efuse/CMakeFiles/__idf_efuse.dir/src/esp_efuse_api.c.obj	8354f75721779283
+3813	4498	8017035977072771	esp-idf/efuse/CMakeFiles/__idf_efuse.dir/esp32s3/esp_efuse_utility.c.obj	8849a916422aa017
+3880	4550	8017035977575645	esp-idf/esp_system/CMakeFiles/__idf_esp_system.dir/esp_err.c.obj	1c0163773aaa6482
+3971	4566	8017035977713330	esp-idf/esp_hw_support/CMakeFiles/__idf_esp_hw_support.dir/cpu.c.obj	4281afc7198b1d6d
+4066	4599	8017035977979864	esp-idf/esp_hw_support/CMakeFiles/__idf_esp_hw_support.dir/esp_memory_utils.c.obj	ed50bdb326b069dc
+3762	4683	8017035978839184	esp-idf/efuse/CMakeFiles/__idf_efuse.dir/src/esp_efuse_utility.c.obj	d68d5cb677364fce
+4344	4881	8017035980890672	esp-idf/esp_hw_support/CMakeFiles/__idf_esp_hw_support.dir/port/esp32s3/rtc_pm.c.obj	ed5291b665709ccc
+3855	4932	8017035981238999	esp-idf/efuse/CMakeFiles/__idf_efuse.dir/src/efuse_controller/keys/with_key_purposes/esp_efuse_api_key.c.obj	13a616be96bcae55
+4325	5099	8017035983060444	esp-idf/esp_hw_support/CMakeFiles/__idf_esp_hw_support.dir/port/esp32s3/rtc_clk_init.c.obj	d37ff94bcbd69131
+4201	5107	8017035983274324	esp-idf/esp_hw_support/CMakeFiles/__idf_esp_hw_support.dir/port/esp32s3/rtc_clk.c.obj	ffe877b5f427a2fd
+4567	5124	8017035983324161	esp-idf/esp_hw_support/CMakeFiles/__idf_esp_hw_support.dir/port/esp32s3/chip_info.c.obj	250782ac1c5b3739
+4550	5166	8017035983968931	esp-idf/esp_hw_support/CMakeFiles/__idf_esp_hw_support.dir/port/esp32s3/rtc_sleep.c.obj	480d5fd3c3022b16
+4499	5196	8017035984213403	esp-idf/esp_hw_support/CMakeFiles/__idf_esp_hw_support.dir/port/esp32s3/rtc_time.c.obj	84a036e5bc6ce316
+4600	5224	8017035984368160	esp-idf/log/CMakeFiles/__idf_log.dir/log_noos.c.obj	4a760cbe32d693b1
+4336	5291	8017035984867950	esp-idf/esp_hw_support/CMakeFiles/__idf_esp_hw_support.dir/port/esp32s3/rtc_init.c.obj	bb14f089a1912d4f
+4933	5299	8017035984948420	esp-idf/esp_rom/CMakeFiles/__idf_esp_rom.dir/patches/esp_rom_crc.c.obj	2d9c7e0ac83051c7
+4684	5320	8017035985338354	esp-idf/log/CMakeFiles/__idf_log.dir/log_buffers.c.obj	150c50becd948d51
+4882	5472	8017035986867497	esp-idf/log/CMakeFiles/__idf_log.dir/log.c.obj	c138e4ec6084f5be
+5124	5517	8017035987297676	esp-idf/esp_rom/CMakeFiles/__idf_esp_rom.dir/patches/esp_rom_sys.c.obj	5f3545cbd10e416e
+5100	5581	8017035987668888	esp-idf/esp_common/CMakeFiles/__idf_esp_common.dir/src/esp_err_to_name.c.obj	4f2434dc1284901d
+5167	5619	8017035987708970	esp-idf/esp_rom/CMakeFiles/__idf_esp_rom.dir/patches/esp_rom_efuse.c.obj	d3e266d3224697b4
+5320	5627	8017035988507543	esp-idf/esp_rom/CMakeFiles/__idf_esp_rom.dir/patches/esp_rom_cache_writeback_esp32s3.S.obj	fc353ebacc694a7d
+5300	5628	8017035988517497	esp-idf/esp_rom/CMakeFiles/__idf_esp_rom.dir/patches/esp_rom_longjmp.S.obj	789e79ef280867f4
+5117	5630	8017035988319086	esp-idf/esp_rom/CMakeFiles/__idf_esp_rom.dir/patches/esp_rom_regi2c.c.obj	8ca08daf8f9c7186
+5225	5687	8017035988844826	esp-idf/esp_rom/CMakeFiles/__idf_esp_rom.dir/patches/esp_rom_spiflash.c.obj	7d201d0ab25fc0a5
+5217	5688	8017035989113108	esp-idf/esp_rom/CMakeFiles/__idf_esp_rom.dir/patches/esp_rom_uart.c.obj	40f8d75a41e4c516
+5292	5757	8017035989874284	esp-idf/esp_rom/CMakeFiles/__idf_esp_rom.dir/patches/esp_rom_cache_esp32s2_esp32s3.c.obj	c0ce52422ffd246e
+5517	5855	8017035990807164	esp-idf/esp_rom/CMakeFiles/__idf_esp_rom.dir/patches/esp_rom_systimer.c.obj	c2cabe22ef85e06d
+5582	5866	8017035990860932	esp-idf/esp_rom/CMakeFiles/__idf_esp_rom.dir/patches/esp_rom_mmap.c.obj	e746210283186872
+5620	5971	8017035992031394	esp-idf/main/CMakeFiles/__idf_main.dir/bootloader_start.c.obj	29d2a394b7f4b5d
+5473	5999	8017035992305773	esp-idf/log/liblog.a	31ba73326e8a0df6
+6005	6318	8017035995435029	esp-idf/esp_rom/libesp_rom.a	1a4d064e575ac17e
+6319	6563	8017035997398345	esp-idf/esp_common/libesp_common.a	d6a1eb5d4cf1ee23
+6564	6953	8017036001521577	esp-idf/esp_hw_support/libesp_hw_support.a	bf23eec03ae6b2ef
+6954	7278	8017036005136950	esp-idf/esp_system/libesp_system.a	406337b4db7363bc
+7285	7709	8017036009324024	esp-idf/efuse/libefuse.a	430d6c80874ead03
+7710	8093	8017036013133584	esp-idf/bootloader_support/libbootloader_support.a	e045e58c4edf14f5
+8094	8448	8017036016302880	esp-idf/esp_app_format/libesp_app_format.a	9de00d3494af5657
+8449	8775	8017036019714131	esp-idf/hal/libhal.a	d1f5745eba55902
+8775	9194	8017036024074550	esp-idf/micro-ecc/libmicro-ecc.a	ccb812577f71607e
+9195	9682	8017036028900048	esp-idf/soc/libsoc.a	25705885a5e91f72
+9682	10076	8017036032492755	esp-idf/xtensa/libxtensa.a	7ce07bcd98fe764
+10076	10469	8017036036866315	esp-idf/main/libmain.a	f481c784bce30637
+10470	11171	8017036043013282	bootloader.elf	d92fe41946f0d85f
+11171	12501	8017036056992832	.bin_timestamp	5e773283ab471018
+11171	12501	8017036056992832	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/.bin_timestamp	5e773283ab471018
+12501	12942	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+12501	12942	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+14	113	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+14	113	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+11	107	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+11	107	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	108	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	108	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	115	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	115	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	109	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	109	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+12	114	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+12	114	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	107	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	107	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	97	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	97	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+14	127	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+14	127	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+12	103	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+12	103	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+16	106	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+16	106	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+18	132	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+18	132	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+12	99	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+12	99	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+26	124	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+26	124	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+11	115	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+11	115	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	102	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	102	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+13	112	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+13	112	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+34	147	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+34	147	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	103	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	103	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	102	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	102	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+8	102	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+8	102	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	107	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	107	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	104	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	104	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	98	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	98	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	101	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	101	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+11	121	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+11	121	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	100	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	100	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+30	133	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+30	133	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	106	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	106	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	104	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	104	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+12	109	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+12	109	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	102	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	102	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	100	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	100	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	102	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	102	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	108	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	108	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	106	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	106	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+13	121	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+13	121	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	102	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	102	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+17	126	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+17	126	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	107	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	107	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+11	112	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+11	112	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	105	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	105	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	102	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+10	102	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	110	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
+9	110	0	C:/drone_projeto/esp drone atual/ESP-Drone/Firmware/esp-drone/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c1cdf6df82510615
