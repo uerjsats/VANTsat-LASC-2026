@@ -169,5 +169,10 @@ void loop() {
     if (currentMillis - lastCommandTime >= COMMAND_INTERVAL) {
         lastCommandTime = currentMillis;
         send_crtp_command(current_roll, current_pitch, current_yaw, current_thrust);
+        
+        // Esvazia buffer do hardware para evitar transbordamento pelos ACKs recebidos
+        while (Serial1.available()) {
+            Serial1.read();
+        }
     }
 }
