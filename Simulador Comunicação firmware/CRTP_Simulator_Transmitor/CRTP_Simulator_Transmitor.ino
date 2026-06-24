@@ -1,33 +1,39 @@
 #include <Arduino.h> 
+
 // ---------------------------------------------------------
 // Definições de Hardware e UART
 // ---------------------------------------------------------
-#define TX_PIN        43       
-#define RX_PIN        44       
+#define TX_PIN        21       
+#define RX_PIN        20      
 #define BAUDRATE      115200   
 
 #define CRTP_START_BYTE  0xAA
 #define COMMANDER_HEADER 0x30 
+
 // ---------------------------------------------------------
 // Estrutura de Dados do Movimento (Payload)
 // ---------------------------------------------------------
 struct CommanderPayload {
-    float roll;     
+    float roll;
     float pitch;    
     float yaw;       
     uint16_t thrust; 
 } __attribute__((packed)); 
 
 // ---------------------------------------------------------
-// Variáveis de Frequência e Tempo
+// Variáveis de Frequência, Tempo e Sincronização
 // ---------------------------------------------------------
 unsigned long lastCommandTime = 0;
-const unsigned long COMMAND_INTERVAL = 20; // 50Hz (20ms) - Frequência necessária para manter o voo
+const unsigned long COMMAND_INTERVAL = 20; // 50Hz (20ms)
 
 unsigned long stateStartTime = 0;
 const unsigned long STATE_DURATION = 10000;
+
+// Flag de bloqueio para o sinal "Ready to Fly"
+bool is_ready_to_fly = false;
+
 // ---------------------------------------------------------
-// Máquina de Estados
+// Máquina de Estados de Voo
 // ---------------------------------------------------------
 enum FlightState {
     TAKEOFF,
@@ -38,8 +44,8 @@ enum FlightState {
     HOVER_3,
     LANDING
 };
-
 FlightState currentState = TAKEOFF;
+
 // Variáveis atuais a serem enviadas
 float current_roll = 0.0;
 float current_pitch = 0.0;
@@ -47,7 +53,7 @@ float current_yaw = 0.0;
 uint16_t current_thrust = 0;
 
 // ---------------------------------------------------------
-// Função de Transmissão CRTP
+// Função de Transmissão CRTP (Setpoint)
 // ---------------------------------------------------------
 void send_crtp_command(float roll, float pitch, float yaw, uint16_t thrust) {
     CommanderPayload payload;
@@ -57,8 +63,8 @@ void send_crtp_command(float roll, float pitch, float yaw, uint16_t thrust) {
     payload.thrust = thrust;  
 
     uint8_t payload_size = sizeof(payload); 
-    uint8_t checksum = 0;                  
-
+    uint8_t checksum = 0;
+    
     Serial1.write(CRTP_START_BYTE); 
     Serial1.write(CRTP_START_BYTE); 
 
@@ -70,7 +76,7 @@ void send_crtp_command(float roll, float pitch, float yaw, uint16_t thrust) {
 
     uint8_t* payload_bytes = (uint8_t*)&payload;
     for (int i = 0; i < payload_size; i++) {    
-        Serial1.write(payload_bytes[i]);        
+        Serial1.write(payload_bytes[i]);
         checksum += payload_bytes[i];            
     }
 
@@ -78,30 +84,100 @@ void send_crtp_command(float roll, float pitch, float yaw, uint16_t thrust) {
 }
 
 // ---------------------------------------------------------
+// Função de Recepção CRTP (Parser Não Bloqueante)
+// ---------------------------------------------------------
+void process_rx_ready_to_fly() {
+    static uint8_t rx_state = 0;
+    static uint8_t calculated_checksum = 0;
+
+    // Processa todos os bytes disponíveis no buffer sem travar o loop
+    while (Serial1.available() > 0 && !is_ready_to_fly) {
+        uint8_t c = Serial1.read();
+        
+        switch (rx_state) {
+            case 0: // Aguarda o primeiro START_BYTE
+                if (c == CRTP_START_BYTE) rx_state = 1;
+                break;
+            case 1: // Aguarda o segundo START_BYTE
+                if (c == CRTP_START_BYTE) rx_state = 2;
+                else rx_state = 0;
+                break;
+            case 2: // Aguarda o HEADER 0xF0 (Porta 15, Canal 0)
+                if (c == 0xF0) {
+                    calculated_checksum = c;
+                    rx_state = 3;
+                } else {
+                    rx_state = 0;
+                }
+                break;
+            case 3: // Aguarda o SIZE (0x01 byte)
+                if (c == 0x01) {
+                    calculated_checksum += c;
+                    rx_state = 4;
+                } else {
+                    rx_state = 0;
+                }
+                break;
+            case 4: // Aguarda o PAYLOAD (0x01)
+                if (c == 0x01) {
+                    calculated_checksum += c;
+                    rx_state = 5;
+                } else {
+                    rx_state = 0;
+                }
+                break;
+            case 5: // Aguarda e valida o CHECKSUM
+                if (c == calculated_checksum) {
+                    is_ready_to_fly = true;
+                    Serial.println("\n>>> SINAL [READY TO FLY] RECEBIDO! <<<");
+                    Serial.println("=== INICIANDO MISSÃO CRTP ===");
+                    
+                    // ADICIONAR IMPRESSÃO DO PRIMEIRO ESTADO AQUI
+                    Serial.println("-> TAKEOFF"); 
+
+                    delay(2000);
+                    
+                    // Sincroniza os cronômetros para o início exato da missão
+                    stateStartTime = millis();
+                    lastCommandTime = millis();
+                } else {
+                    Serial.println("Erro: Checksum invalido no sinal RTF.");
+                }
+                rx_state = 0;
+                break;
+        }
+    }
+}
+
+// ---------------------------------------------------------
 // SETUP
 // ---------------------------------------------------------
 void setup() {
     Serial.begin(115200); 
-    delay(1000);          
-    Serial.println("=== INICIANDO TRANSMISSOR DE VOO CONTINUO CRTP ===");
+    delay(1000);
+    Serial.println("=== AGUARDANDO SINAL DE SINCRONIZACAO (READY TO FLY) ===");
 
     Serial1.begin(BAUDRATE, SERIAL_8N1, RX_PIN, TX_PIN);
-    
-    // Inicia a contagem de tempo
-    stateStartTime = millis();
 }
 
 // ---------------------------------------------------------
 // LOOP - Sequência Contínua Sem Bloqueios
 // ---------------------------------------------------------
 void loop() {
+    // 1. O sistema fica interceptando os pacotes até receber o RTF
+    if (!is_ready_to_fly) {
+        process_rx_ready_to_fly();
+        return; // Retorna imediatamente, bloqueando a lógica de voo
+    }
+
+    // 2. Lógica de Máquina de Estados e Voo (Só executa se is_ready_to_fly == true)
     unsigned long currentMillis = millis();
     unsigned long timeInState = currentMillis - stateStartTime;
 
     if (timeInState >= STATE_DURATION) {
-        stateStartTime = currentMillis; // Reinicia o cronómetro para o próximo estado
+        stateStartTime = currentMillis;
         timeInState = 0;
-
+        
         switch(currentState) {
             case TAKEOFF:  currentState = HOVER_1;  Serial.println("-> HOVER_1"); break;
             case HOVER_1:  currentState = MOVING_1; Serial.println("-> MOVING_1"); break;
@@ -113,7 +189,7 @@ void loop() {
         }
     }
 
-    // 2. Definir os valores dos comandos de acordo com o estado atual
+    // 3. Definir os valores dos comandos de acordo com o estado atual
     switch(currentState) {
         case TAKEOFF:
             current_roll = 0.0;
@@ -134,7 +210,7 @@ void loop() {
         case MOVING_1:
         case MOVING_2:
             current_roll = 0.0;
-            current_pitch = -15.0; // Inclina o nariz para baixo para avançar [cite: 19]
+            current_pitch = -15.0; 
             current_yaw = 0.0;
             current_thrust = 32767;
             break;
@@ -145,32 +221,25 @@ void loop() {
             current_yaw = 0.0;
             
             if (timeInState < 5000) {
-                // 1. Calcula o progresso do estado em uma escala normalizada de 0.0 a 1.0
                 float progress = (float)timeInState / 5000.0;
-                
-                // 2. Inverte o progresso (inicia em 1.0 e decai até 0.0)
                 float reverse_progress = 1.0 - progress;
-                
-                // 3. Define o limiar inferior onde os motores perdem efetividade.
-                // Abaixo deste valor o drone cai. (Ajuste fino de acordo com a bateria/peso).
                 const uint16_t MIN_LIFT_THRUST = 18000; 
                 const uint16_t MAX_HOVER_THRUST = 32767;
                 
-                // 4. Aplica o decaimento quadrático (reverse_progress^2).
                 current_thrust = MIN_LIFT_THRUST + ((MAX_HOVER_THRUST - MIN_LIFT_THRUST) * (reverse_progress * reverse_progress));
-                
             } else {
-                // 5. Corta a energia integralmente apenas no término dos 5 segundos
                 current_thrust = 0;
             }
             break;
     }
-    // 3. Enviar o comando constantemente a 50Hz (a cada 20 milissegundos)
+
+    // 4. Enviar o comando constantemente a 50Hz
     if (currentMillis - lastCommandTime >= COMMAND_INTERVAL) {
         lastCommandTime = currentMillis;
         send_crtp_command(current_roll, current_pitch, current_yaw, current_thrust);
         
-        // Esvazia buffer do hardware para evitar transbordamento pelos ACKs recebidos
+        // Esvazia buffer do hardware apenas quando em voo, 
+        // evitando interferência na recepção inicial do pacote RTF
         while (Serial1.available()) {
             Serial1.read();
         }

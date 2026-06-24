@@ -25,8 +25,8 @@ void captureAndSave() {
     String tipoFigura = processVisionFrame(fb);
     // Condicional: Interrompe a execução caso não seja Triângulo ou Quadrado
     if (tipoFigura != "TRIANGULO" && tipoFigura != "QUADRADO") {
-        esp_camera_fb_return(fb); // Libera o DMA do framebuffer antes de sair
-        return;
+        //esp_camera_fb_return(fb); // Libera o DMA do framebuffer antes de sair
+        //return;
     }
     String path = "/" + String(circularIndex) + ".jpg";
     

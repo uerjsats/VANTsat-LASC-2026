@@ -34,7 +34,7 @@
 
 // --- CONTROLE TEMPORAL DA MISSÃO AUTÔNOMA ---
 unsigned long lastCaptureTime = 0;
-const unsigned long CAPTURE_INTERVAL_MS = 10000; // Define o intervalo em milissegundos (10s)
+const unsigned long CAPTURE_INTERVAL_MS = 5000; // Define o intervalo em milissegundos (10s)
 
 void setup() {
     Serial.begin(115200);
@@ -77,12 +77,14 @@ void setup() {
     config.pin_sscb_scl = SIOC_GPIO_NUM;
     config.pin_pwdn = PWDN_GPIO_NUM;
     config.pin_reset = RESET_GPIO_NUM;
-    config.xclk_freq_hz = 20000000; // 20MHz recomendado
-    config.pixel_format = PIXFORMAT_GRAYSCALE;
+    config.xclk_freq_hz = 20000000; 
+    // Utilize PIXFORMAT_JPEG se for transmitir a imagem pela rede. 
+    // Mantenha GRAYSCALE apenas se for processar os tensores localmente no ESP32.
+    config.pixel_format = PIXFORMAT_GRAYSCALE; 
     config.frame_size = FRAMESIZE_QVGA;
-    config.jpeg_quality = 15;
+    config.jpeg_quality = 10; // Será ignorado pelo hardware se o formato for GRAYSCALE
     config.fb_count = 1;
-    config.fb_location = CAMERA_FB_IN_PSRAM; // Força alocação na PSRAM do S3
+    config.fb_location = CAMERA_FB_IN_PSRAM; 
 
     esp_err_t err = esp_camera_init(&config);
     if (err != ESP_OK) {
@@ -92,19 +94,29 @@ void setup() {
 
     sensor_t * s = esp_camera_sensor_get();
     if (s) {
-        // Ajustes finos de imagem mantidos
-        s->set_exposure_ctrl(s, 1);
-        s->set_ae_level(s, -2);
-        s->set_gain_ctrl(s, 0);
-        s->set_agc_gain(s, 0);
-        s->set_gainceiling(s, (gainceiling_t)0);
-        s->set_brightness(s, -1);
-        s->set_contrast(s, 2);
-        s->set_sharpness(s, 2);
-        s->set_whitebal(s, 1);
-        s->set_wb_mode(s, 1);
-        s->set_bpc(s, 1);
-        s->set_wpc(s, 1);
+        s->set_exposure_ctrl(s, 1); 
+        
+        // 1. Subexposição Forçada: Reduz o target do algoritmo de Auto Exposição.
+        // Isso empurra os tons escuros para o limite inferior da matriz (0x00).
+        s->set_ae_level(s, -2);      
+        
+        s->set_gain_ctrl(s, 1);     
+        s->set_gainceiling(s, (gainceiling_t)2); 
+        
+        // 2. Rebaixamento do Ponto de Preto: Corta a luminosidade residual.
+        s->set_brightness(s, -2);    
+        
+        // 3. Maximização da Distância Tonal: Força a separação abrupta entre claro e escuro.
+        // O valor 2 é o máximo recomendado no driver da Espressif.
+        s->set_contrast(s, 2);      
+        
+        // 4. Acutância (Nitidez): Mantém bordas rígidas, essencial para algoritmos de Sobel/Canny.
+        s->set_sharpness(s, 2);     
+        
+        s->set_whitebal(s, 1);      
+        s->set_wb_mode(s, 0);       
+        s->set_bpc(s, 1);           
+        s->set_wpc(s, 1);          
     }    
 
     // 4. Inicializa o Access Point WiFi

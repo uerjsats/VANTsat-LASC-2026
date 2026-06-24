@@ -96,4 +96,4 @@ def listen_heltec_stream(porta_com, baudrate=115200):
     cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    listen_heltec_stream('COM29', 115200)
+    listen_heltec_stream('COM3', 115200)
