@@ -34,6 +34,7 @@ void setupWiFi() {
 
 void handleClient() {
     WiFiClient client = server.available();
+    Serial.println("WIFI Ligado!");
     if (client) {
         Serial.println("\n[TCP] Cliente conectado.");
         unsigned long timeout = millis();

@@ -144,6 +144,7 @@ void TakeOff() {
     current_pitch = 0.0;
     current_yaw = 0.0;
     current_thrust = 45000;
+    Serial.println("TAKE OFF");
 }
 
 void Hover() {
@@ -151,6 +152,8 @@ void Hover() {
     current_pitch = 0.0;
     current_yaw = 0.0;
     current_thrust = 32767;
+    Serial.println("Hover");
+
 }
 
 void Moving() {
@@ -158,12 +161,16 @@ void Moving() {
     current_pitch = -15.0; 
     current_yaw = 0.0;
     current_thrust = 32767;
+    Serial.println("Moving");
+
 }
 
 void Landing(unsigned long timeInState) {
     current_roll = 0.0;
     current_pitch = 0.0;
     current_yaw = 0.0;
+    Serial.println("Landing");
+
     
     if (timeInState < 5000) {
         float progress = (float)timeInState / 5000.0;

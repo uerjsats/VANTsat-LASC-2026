@@ -9,7 +9,7 @@ int circularIndex = 0;
 uint32_t totalIndex = 1;
 extern unsigned long missionStartTime;
 
-void captureAndSave() {
+String captureAndSave() {
 
     camera_fb_t * old_fb = esp_camera_fb_get();
     if (old_fb) {
@@ -19,7 +19,7 @@ void captureAndSave() {
     camera_fb_t * fb = esp_camera_fb_get();
     if (!fb) {
         Serial.println("ERR:CAMERA_FAIL");
-        return;
+        return "";
     }
 
     String tipoFigura = processVisionFrame(fb);
@@ -27,7 +27,7 @@ void captureAndSave() {
     
     if (tipoFigura != "TRIANGULO" && tipoFigura != "QUADRADO") {
         esp_camera_fb_return(fb); // Libera o DMA do framebuffer antes de sair
-        return;
+        return "DESCONHECIDO";
     }
     
     String path = "/" + String(circularIndex) + ".jpg";
@@ -41,7 +41,7 @@ void captureAndSave() {
     if (!jpeg_converted) {
         Serial.println("ERR:JPEG_COMPRESSION_FAIL");
         esp_camera_fb_return(fb);
-        return;
+        return "DESCONHECIDO";
     }
 
     // Alterado de SD_MMC para SD
@@ -92,6 +92,7 @@ void captureAndSave() {
     }
     // Libera o DMA do framebuffer da câmera
     esp_camera_fb_return(fb);
+    return tipoFigura;
 }
 
 void resetMission() {

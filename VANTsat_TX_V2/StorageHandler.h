@@ -15,7 +15,7 @@ extern uint32_t totalIndex;
 extern unsigned long missionStartTime;
 
 // Protótipos das funções de armazenamento
-void captureAndSave();
+String captureAndSave();
 void sendImageDataSerial(int index);
 void sendImageToClient(WiFiClient &client, int index);
 void resetMission();

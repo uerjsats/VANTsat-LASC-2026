@@ -43,6 +43,8 @@ unsigned long missionStartTime = 0;
 unsigned long landingStartTime = 0;
 uint8_t currentTestStage = 0;
 bool testStarted = false;
+bool missionFinished = false;
+
 
 
 void setup() {
@@ -137,60 +139,98 @@ void setup() {
     Serial.println("\n--- VANTsat TX (XIAO ESP32S3 SENSE): ONLINE ---");
 }
 
+
+/**
+ * void loop() reformulado para seguir estritamente o fluxo da imagem manuscrita:
+ * 1. IF READYTOFLY == TRUE (crtp_is_ready())
+ * 2.   RESETMISSION(); TAKEOFF(); (Initialization only once)
+ * 3.   WHILE image != TRIANGULO && image != QUADRADO (Fixed logical error)
+ * 4.     HOVER();
+ * 5.     image = CAPTURE_AND_SAVE();
+ * 6.     IF image == TRIANGULO: MOVING();
+ * 7.     ELSEIF image == QUADRADO: LANDING(); missionFinished=true;
+ * 8. HandleClient(); (outside)
+ */
 void loop() {
-    // 1. Manutenção do Link CRTP (Garante envio a 50Hz e recepção)
-    crtp_update();
-
-    // 2. Bloqueio de Missão (Aguarda sinal Ready to Fly do receptor)
-    if (!crtp_is_ready()) {
-        return; 
-    }
-
-    // 3. Sincronização Inicial do Timer da Missão
-    if (!testStarted) {
-        missionStartTime = millis();
-        testStarted = true;
-        Serial.println("[CRTP_TEST] Sincronizado. Iniciando contagem da missão.");
-    }
-
-    // 4. Máquina de Estados Temporizada Baseada nas Funções Procedurais
-    unsigned long elapsedTestTime = millis() - missionStartTime;
-
-    if (currentTestStage == 0 && elapsedTestTime > 10000) {
-        // Aguarda 10 segundos de estabilização pós-sincronização
-        Serial.println("[CRTP_TEST] Comando: Decolagem (TakeOff)");
-        TakeOff();
-        currentTestStage = 1;
-    }
-    else if (currentTestStage == 1 && elapsedTestTime > 15000) {
-        // Após 5 segundos em decolagem, transiciona para hover
-        Serial.println("[CRTP_TEST] Comando: Pairar (Hover)");
-        Hover();
-        currentTestStage = 2;
-    }
-    else if (currentTestStage == 2 && elapsedTestTime > 25000) {
-        // Após 10 segundos em hover, simula deslocamento
-        Serial.println("[CRTP_TEST] Comando: Avançar (Moving)");
-        Moving();
-        currentTestStage = 3;
-    }
-    else if (currentTestStage == 3 && elapsedTestTime > 30000) {
-        // Captura o momento exato em que o pouso inicia
-        if (landingStartTime == 0) {
-            landingStartTime = millis();
-            Serial.println("[CRTP_TEST] Comando: Pousar (Landing)");
-        }
+    // A malha de controle CRTP agora só opera enquanto a missão não estiver concluída
+    if (!missionFinished) {
         
-        // Calcula o tempo decorrido exclusivamente na fase de pouso
-        unsigned long timeInLanding = millis() - landingStartTime;
-        
-        // Atualiza a curva de decaimento quadrático do motor
-        Landing(timeInLanding); 
+        // 1. Manutenção do CRTP durante a missão ativa
+        crtp_update();
 
-        // Encerra a progressão dos estágios quando o pouso completa 5 segundos
-        if (timeInLanding > 5000) {
-            currentTestStage = 4;
-            Serial.println("[CRTP_TEST] Missão Finalizada. Motores cortados.");
+        // 2. Aguarda sinal Ready to Fly
+        if (!crtp_is_ready()) {
+            return; 
         }
+
+        // 3. Inicialização e Decolagem
+        if (!testStarted) {
+            resetMission();
+            TakeOff(); // Define current_thrust = 45000
+            
+            // Retenção explícita do estado de TakeOff por 2 segundos (2000 ms)
+            // Impede que o Hover sobrescreva a tração de decolagem prematuramente
+            unsigned long takeoff_start = millis();
+            while (millis() - takeoff_start < 5000) {
+                crtp_update(); // Mantém o envio de pacotes a 50Hz
+            }
+            
+            testStarted = true;
+        }
+
+        // 4. Captura Inicial 
+        String imageFound = captureAndSave();
+
+        // 5. Laço de Execução de Visão
+        while (imageFound != "TRIANGULO" && imageFound != "QUADRADO") {
+            crtp_update();
+            
+            Hover(); // Define current_thrust = 32767
+            imageFound = captureAndSave(); 
+
+            if (imageFound == "TRIANGULO" || imageFound == "QUADRADO") {
+                break;
+            }
+        }
+
+        // 6. Execução das Ações de Missão
+        if (imageFound == "TRIANGULO") {
+            Moving(); // Define pitch = -15.0
+            
+            // ADICIONADO: Retenção de estado de movimento durante 5000 ms
+            unsigned long moving_start = millis();
+            while (millis() - moving_start < 5000) {
+                crtp_update(); 
+            }
+            
+        } else if (imageFound == "QUADRADO") {
+
+            unsigned long landing_start_time = millis(); 
+            unsigned long timeInState = 0;
+
+            // Retenção do estado de Pouso por 5 segundos
+            while (timeInState < 5000) {
+                crtp_update();
+                timeInState = millis() - landing_start_time;
+                Landing(timeInState); // Decaimento progressivo do current_thrust
+            }
+
+            // Encerra a missão, o que bloqueia permanentemente chamadas futuras a crtp_update()
+            missionFinished = true;
+            
+            // ADICIONADO: Encerramento do barramento de hardware UART (RX/TX)
+            Serial1.end(); 
+
+            Serial.println("[MISSÃO] Quadrado detectado. Pousando e barramento Serial1 (CRTP) encerrado.");
+            
+            // Inicializa a rede para telemetria/acesso web
+            setupWiFi(); 
+        }
+
+    }
+    
+    // 7. Manutenção de Rede em Estado de Repouso
+    if (missionFinished) {
+          handleClient(); 
     }
 }
