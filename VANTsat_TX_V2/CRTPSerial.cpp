@@ -62,9 +62,6 @@ static void process_rx_ready_to_fly() {
 
     while (Serial1.available() > 0 && !is_ready_to_fly) {
         uint8_t c = Serial1.read();
-        
-        // DEPURAÇÃO (Descomente a linha abaixo para visualizar o raw dump de bytes chegando na UART)
-        // Serial.printf("%02X ", c);
 
         switch (rx_state) {
             case 0: // 1. Aguarda o primeiro START_BYTE (0xAA)

@@ -1,3 +1,4 @@
+//Bibliotecas
 #include "esp_camera.h"
 #include <SPI.h>
 #include <SD.h>
@@ -7,7 +8,6 @@
 #include "VisionSystem.h"
 #include "NetworkManager.h"
 #include "StorageHandler.h"
-// Removido: #include "SerialBridge.h"
 
 // --- DEFINIÇÃO DE PINOS XIAO ESP32S3 SENSE ---
 #define PWDN_GPIO_NUM     -1
@@ -27,7 +27,7 @@
 #define HREF_GPIO_NUM     47
 #define PCLK_GPIO_NUM     13
 
-// --- PINOS SPI PARA O CARTÃO MICROSD (Expansion Board) ---
+// --- PINOS SPI PARA O CARTÃO MICROSD ---
 #define SD_SCK  7
 #define SD_MISO 8
 #define SD_MOSI 9
@@ -46,11 +46,10 @@ bool testStarted = false;
 bool missionFinished = false;
 
 
-
 void setup() {
     Serial.begin(115200);
 
-    // 1. Inicializa o Cartão SD via SPI padrão
+    // 1. Inicializa o Cartão SD
     SPI.begin(SD_SCK, SD_MISO, SD_MOSI, SD_CS);
     if(!SD.begin(SD_CS, SPI)) { 
         Serial.println("[ERR] Falha ao montar SD");
@@ -58,7 +57,7 @@ void setup() {
         Serial.println("[OK] SD montado com sucesso.");
     }
     
-    // 2. Inicializa a PSRAM (OPI PSRAM no ESP32-S3)
+    // 2. Inicializa a PSRAM
     if (psramInit()) {
         initVisionBuffers();
         Serial.println("[OK] PSRAM Inicializada");
@@ -88,12 +87,12 @@ void setup() {
     config.pin_sscb_scl = SIOC_GPIO_NUM;
     config.pin_pwdn = PWDN_GPIO_NUM;
     config.pin_reset = RESET_GPIO_NUM;
-    config.xclk_freq_hz = 20000000; // 20MHz recomendado
+    config.xclk_freq_hz = 20000000; 
     config.pixel_format = PIXFORMAT_GRAYSCALE;
     config.frame_size = FRAMESIZE_QVGA;
     config.jpeg_quality = 10;
     config.fb_count = 1;
-    config.fb_location = CAMERA_FB_IN_PSRAM; // Força alocação na PSRAM do S3
+    config.fb_location = CAMERA_FB_IN_PSRAM;
 
     esp_err_t err = esp_camera_init(&config);
     if (err != ESP_OK) {
@@ -139,20 +138,8 @@ void setup() {
     Serial.println("\n--- VANTsat TX (XIAO ESP32S3 SENSE): ONLINE ---");
 }
 
-
-/**
- * void loop() reformulado para seguir estritamente o fluxo da imagem manuscrita:
- * 1. IF READYTOFLY == TRUE (crtp_is_ready())
- * 2.   RESETMISSION(); TAKEOFF(); (Initialization only once)
- * 3.   WHILE image != TRIANGULO && image != QUADRADO (Fixed logical error)
- * 4.     HOVER();
- * 5.     image = CAPTURE_AND_SAVE();
- * 6.     IF image == TRIANGULO: MOVING();
- * 7.     ELSEIF image == QUADRADO: LANDING(); missionFinished=true;
- * 8. HandleClient(); (outside)
- */
 void loop() {
-    // A malha de controle CRTP agora só opera enquanto a missão não estiver concluída
+    // A malha de controle CRTP só opera durante a missão
     if (!missionFinished) {
         
         // 1. Manutenção do CRTP durante a missão ativa
@@ -167,14 +154,11 @@ void loop() {
         if (!testStarted) {
             resetMission();
             TakeOff(); // Define current_thrust = 45000
-            
-            // Retenção explícita do estado de TakeOff por 2 segundos (2000 ms)
-            // Impede que o Hover sobrescreva a tração de decolagem prematuramente
+
             unsigned long takeoff_start = millis();
             while (millis() - takeoff_start < 5000) {
                 crtp_update(); // Mantém o envio de pacotes a 50Hz
-            }
-            
+            } 
             testStarted = true;
         }
 
@@ -186,23 +170,26 @@ void loop() {
             crtp_update();
             
             Hover(); // Define current_thrust = 32767
+
+            unsigned long hover_start = millis();
+            while (millis() - hover_start < 500) { 
+                crtp_update();
+            } // Define current_thrust = 32767
             imageFound = captureAndSave(); 
 
             if (imageFound == "TRIANGULO" || imageFound == "QUADRADO") {
                 break;
             }
         }
-
         // 6. Execução das Ações de Missão
         if (imageFound == "TRIANGULO") {
             Moving(); // Define pitch = -15.0
             
-            // ADICIONADO: Retenção de estado de movimento durante 5000 ms
+            // Retenção de estado de movimento durante 5000 ms
             unsigned long moving_start = millis();
             while (millis() - moving_start < 5000) {
                 crtp_update(); 
-            }
-            
+            } 
         } else if (imageFound == "QUADRADO") {
 
             unsigned long landing_start_time = millis(); 
@@ -218,7 +205,7 @@ void loop() {
             // Encerra a missão, o que bloqueia permanentemente chamadas futuras a crtp_update()
             missionFinished = true;
             
-            // ADICIONADO: Encerramento do barramento de hardware UART (RX/TX)
+            // Encerramento do barramento de hardware UART (RX/TX)
             Serial1.end(); 
 
             Serial.println("[MISSÃO] Quadrado detectado. Pousando e barramento Serial1 (CRTP) encerrado.");
@@ -226,9 +213,7 @@ void loop() {
             // Inicializa a rede para telemetria/acesso web
             setupWiFi(); 
         }
-
     }
-    
     // 7. Manutenção de Rede em Estado de Repouso
     if (missionFinished) {
           handleClient(); 

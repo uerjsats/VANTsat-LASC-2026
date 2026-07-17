@@ -3,8 +3,8 @@
 // ---------------------------------------------------------
 // Definições de Hardware e UART
 // ---------------------------------------------------------
-#define TX_PIN        21       
-#define RX_PIN        20      
+#define TX_PIN        43       
+#define RX_PIN        44      
 #define BAUDRATE      115200   
 
 #define CRTP_START_BYTE  0xAA
