@@ -8,6 +8,7 @@
 #include "VisionSystem.h"
 #include "NetworkManager.h"
 #include "StorageHandler.h"
+#include "Center.h"
 
 // --- DEFINIÇÃO DE PINOS XIAO ESP32S3 SENSE ---
 #define PWDN_GPIO_NUM     -1
@@ -128,6 +129,8 @@ void setup() {
     // 4. Inicializa o Access Point WiFi
     setupWiFi();
 
+    initCenterBuffers();
+
     // 5. Configura o tempo inicial da missão
     missionStartTime = millis();
     lastCaptureTime = millis(); // Adicione esta linha para sincronizar o timer
@@ -137,6 +140,7 @@ void setup() {
 
     Serial.println("\n--- VANTsat TX (XIAO ESP32S3 SENSE): ONLINE ---");
 }
+
 
 void loop() {
     // A malha de controle CRTP só opera durante a missão
@@ -217,5 +221,9 @@ void loop() {
     // 7. Manutenção de Rede em Estado de Repouso
     if (missionFinished) {
           handleClient(); 
+    }
+    static unsigned long lastMemCheck = 0;
+    if (millis() - lastMemCheck > 1000) {
+    lastMemCheck = millis();
     }
 }

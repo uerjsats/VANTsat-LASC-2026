@@ -1,16 +1,20 @@
 #include "StorageHandler.h"
 #include "VisionSystem.h"
 #include "esp_camera.h"
+#include "Center.h"
 
+#define MISSION_DIR "/missao"
+#define LOG_FILE "/missao/data.txt"
 // Inicialização das variáveis de estado
-const int MAX_CIRCULAR_INDEX = 10;
-const char* LOG_FILE = "/data.txt";
+const int MAX_CIRCULAR_INDEX = 20;
 int circularIndex = 0;
 uint32_t totalIndex = 1;
 extern unsigned long missionStartTime;
 
-String captureAndSave() {
+int droneControlPositionCode = -1;
 
+
+String captureAndSave() {
     camera_fb_t * old_fb = esp_camera_fb_get();
     if (old_fb) {
         esp_camera_fb_return(old_fb);
@@ -29,8 +33,12 @@ String captureAndSave() {
         esp_camera_fb_return(fb); // Libera o DMA do framebuffer antes de sair
         return "DESCONHECIDO";
     }
+
+    droneControlPositionCode = processCentralization(fb, tipoFigura);
+    Serial.printf("Quadrante: %d\n", droneControlPositionCode);
     
-    String path = "/" + String(circularIndex) + ".jpg";
+    // Concatenação de string ajustada para o subdiretório de missão
+    String path = String(MISSION_DIR) + "/" + String(circularIndex) + ".jpg";
     
     // Variáveis para receber o buffer JPEG compactado
     size_t jpeg_len = 0;
@@ -44,7 +52,11 @@ String captureAndSave() {
         return "DESCONHECIDO";
     }
 
-    // Alterado de SD_MMC para SD
+    // Validação estrutural do sistema de arquivos na tabela FAT
+    if (!SD.exists(MISSION_DIR)) {
+        SD.mkdir(MISSION_DIR);
+    }
+
     File file = SD.open(path.c_str(), FILE_WRITE);
     size_t bytesSalvos = 0; 
 
@@ -71,9 +83,8 @@ String captureAndSave() {
         }
         file.close();
         
-        // Gravação do LOG 
+        // Gravação do LOG estruturado apontando para /missao/data.txt
         double missionTimeSeconds = (millis() - missionStartTime) / 1000.0;
-        // Alterado de SD_MMC para SD
         File log = SD.open(LOG_FILE, FILE_APPEND);
         if (log) {
             log.printf("TIPO:%s, CID:%d, TID:%u, Size:%zu, TS:%.3f\n", 
@@ -96,25 +107,56 @@ String captureAndSave() {
 }
 
 void resetMission() {
-    for (int i = 0; i < MAX_CIRCULAR_INDEX; i++) {
-        String path = "/" + String(i) + ".jpg";
-        // Alterado de SD_MMC para SD
-        if (SD.exists(path.c_str())) SD.remove(path.c_str());
-    }
-    // Alterado de SD_MMC para SD
-    SD.remove(LOG_FILE);
+    File dir = SD.open(MISSION_DIR);
     
-    circularIndex = 0;
-    totalIndex = 1;
-    missionStartTime = millis();
-    Serial.println("DONE:MISSION_RESET");
+    if (!dir || !dir.isDirectory()) {
+        Serial.println("ERR:MISSION_DIR_NOT_FOUND_OR_INVALID");
+        return;
+    }
+
+    File file = dir.openNextFile();
+    while (file) {
+        // Evita tratar subdiretórios acidentais dentro da pasta
+        if (!file.isDirectory()) {
+            String fileName = file.name();
+            
+            // Garante que pegamos apenas o nome do arquivo caso file.name() venha com caminho completo
+            int slashIndex = fileName.lastIndexOf('/');
+            if (slashIndex != -1) {
+                fileName = fileName.substring(slashIndex + 1);
+            }
+
+            String filePath = String(MISSION_DIR) + "/" + fileName;
+            
+            file.close(); 
+            
+            if (SD.remove(filePath)) {
+                Serial.printf("DONE:FILE_REMOVED:%s\n", filePath.c_str());
+            } else {
+                Serial.printf("ERR:FILE_REMOVE_FAIL:%s\n", filePath.c_str());
+            }
+        } else {
+            file.close();
+        }
+        
+        file = dir.openNextFile();
+    }
+    dir.close();
+    
+    // Recriação/Zera o arquivo de log
+    File log = SD.open(LOG_FILE, FILE_WRITE);
+    if (log) {
+        log.close();
+    }
+    
+    Serial.println("DONE:MISSION_RESET_COMPLETE");
 }
 
 void sendImageToClient(WiFiClient &client, int index) {
-    String path = "/" + String(index) + ".jpg";
-    // Alterado de SD_MMC para SD
+    // 1. Otimização O(1): Acesso direto ao path em vez de varrer a tabela FAT
+    String path = "/missao/" + String(index) + ".jpg";
     File file = SD.open(path.c_str(), FILE_READ);
-    
+
     if (!file) {
         client.println("ERR:NOT_FOUND");
         return;
@@ -124,47 +166,82 @@ void sendImageToClient(WiFiClient &client, int index) {
     uint32_t retTID = 0;
     float retTS = 0.0;
     char retTipo[32] = "N/A";
-    bool found = false;
 
-    // Recupera os metadados mais recentes do LOG_FILE
-    // Alterado de SD_MMC para SD
-    File log = SD.open(LOG_FILE, FILE_READ);
+    // 2. Extração da telemetria a partir de log linear
+    File log = SD.open("/missao/data.txt", FILE_READ);
     if (log) {
         String searchTag = "CID:" + String(index) + ",";
         while (log.available()) {
             String line = log.readStringUntil('\n');
-            
             if (line.indexOf(searchTag) != -1) {
-                sscanf(line.c_str(), "TIPO:%31[^,], CID:%*d, TID:%u, Size:%*u, TS:%f", retTipo, &retTID, &retTS);
-                found = true;
+                int tipoStart = line.indexOf("TIPO:") + 5;
+                int tipoEnd = line.indexOf(",", tipoStart);
+                if (tipoStart >= 5 && tipoEnd != -1) {
+                    String tipo = line.substring(tipoStart, tipoEnd);
+                    strncpy(retTipo, tipo.c_str(), sizeof(retTipo) - 1);
+                    retTipo[sizeof(retTipo) - 1] = '\0'; // Garantia de terminação nula
+                }
+                int tidStart = line.indexOf("TID:") + 4;
+                int tidEnd = line.indexOf(",", tidStart);
+                if (tidStart >= 4 && tidEnd != -1) {
+                    retTID = line.substring(tidStart, tidEnd).toInt();
+                }
+                int tsStart = line.indexOf("TS:") + 3;
+                if (tsStart >= 3) {
+                    retTS = line.substring(tsStart).toFloat();
+                }
             }
         }
         log.close();
     }
 
-    // Envia o Header estendido via TCP
+    // 3. Cabeçalho do Protocolo
     client.printf("START:%s:%d:%zu:%u:%.3f\n", retTipo, index, size, retTID, retTS);
     client.flush();
 
+    // 4. Buffer redimensionado para 2048 bytes a fim de saturar melhor a janela TCP e reduzir syscalls
     uint8_t buffer[2048]; 
-    
+    bool transferComplete = true;
+
     while (file.available()) {
         if (!client.connected()) {
-            Serial.println("[ERRO] Conexão TCP interrompida durante o envio binário.");
+            Serial.println("[ERRO] Socket TCP fechado de forma assíncrona pelo cliente.");
+            transferComplete = false;
             break;
         }
 
         size_t len = file.read(buffer, sizeof(buffer));
-        client.write(buffer, len);
-        delay(1); 
+        size_t written = 0;
+        unsigned long blockStart = millis();
+
+        while (written < len) {
+            size_t w = client.write(buffer + written, len - written);
+            if (w > 0) {
+                written += w;
+                blockStart = millis();
+            } else {
+                if (millis() - blockStart > 3000) {
+                    Serial.println("[ERRO] Timeout de bloqueio na escrita do TCP.");
+                    transferComplete = false;
+                    break;
+                }
+            }
+            yield(); 
+        }
+
+        if (!transferComplete) break;
     }
     
     file.close();
-    client.flush(); 
-    client.print("\nEND_FRAME\n");
-    client.flush();
     
-    Serial.printf("[OK] Foto %d enviada (%zu bytes) | Tipo: %s\n", index, size, retTipo);
+    if (transferComplete && client.connected()) {
+        // CORREÇÃO CRÍTICA: \n prepended isola a string END_FRAME do array de bytes JPEG para o parser receptor funcionar
+        client.print("\nEND_FRAME\n");
+        client.flush();
+        Serial.printf("[OK] Foto %d enviada (%zu bytes) | Tipo: %s\n", index, size, retTipo);
+    } else {
+        Serial.printf("[FALHA] Transmissao da foto %d abortada pelo stack TCP.\n", index);
+    }
 }
 
 void sendImageDataSerial(int index) {
