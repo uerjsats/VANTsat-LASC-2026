@@ -6,6 +6,35 @@
 
 Este projeto implementa o núcleo de processamento de imagem, telemetria, gestão de armazenamento e controle de voo para a missão **VANTsat**. O firmware foi atualizado para o hardware **XIAO ESP32S3 SENSE**, utilizando uma arquitetura modular otimizada para processamento digital de sinais em tempo real, controle dinâmico de atitude e persistência de dados em sistemas de arquivos embarcados.
 
+## 📥 Como Clonar o Repositório e Iniciar
+
+Para obter o código-fonte deste projeto em sua máquina local, utilize o comando de clone via Git:
+
+```bash
+git clone https://github.com/uerjsats/VANTsat-LASC-2026
+```
+
+**⚠️ Atenção à Versão:** A versão mais recente e atualizada do código está localizada no diretório **`VANTsat_TX_V3`**. Recomenda-se compilar e operar exclusivamente os arquivos contidos nesta pasta.
+
+**Nota de Teste:** A condicional de sincronização física **Ready to Fly** (handshake inicial) encontra-se atualmente **desabilitada**. Esta modificação foi aplicada para permitir a execução imediata de testes de bancada e simulações do sistema de visão sem a necessidade de acoplamento com a base de voo.
+
+**🔗 Arquitetura Dual-MCU e Compilação dos Firmwares:**
+Para a correta execução da missão em voo, é imprescindível compreender a arquitetura de hardware distribuído. O sistema utiliza duas placas independentes operando em conjunto, exigindo toolchains de compilação específicos para cada domínio:
+
+- **Firmware de Missão e Visão Computacional (Este repositório):** Embarcado no hardware **XIAO ESP32S3 SENSE**. Este núcleo é projetado para ser compilado e gravado de forma simplificada através da **Arduino IDE**.
+- **Firmware de Controle de Voo e Atitude:** Embarcado em um segundo **ESP32 (XIAO)**. A comunicação inter-processadores ocorre via barramento **Serial (UART)**, utilizando uma implementação customizada do protocolo **CRTP** (*Crazyradio Real-Time Protocol*).
+
+O firmware responsável pelo controle dinâmico da aeronave deve ser clonado do repositório oficial da equipe:
+[https://github.com/uerjsats/Controle-Atitude-LASC-2026](https://github.com/uerjsats/Controle-Atitude-LASC-2026)
+
+**Build System do Controle de Voo:** Ao contrário do sistema de visão, o código de atitude e estabilização exige o framework oficial da Espressif, o **ESP-IDF**. Após configurar a toolchain do ESP-IDF no seu terminal e navegar até o diretório do controlador de voo, execute a compilação, gravação e monitoramento da porta serial sequencialmente com os comandos:
+
+```bash
+cd <DIRETÓRIO_FIMWARE_CONTROLE_VOO>
+idf.py fullclean
+idf.py build
+idf.py flash monitor
+```
 ## 🚀 Arquitetura do Software
 
 ![Diagrama de Atividades VANTsat](./VANTsat_TX_V3/Imagens%20VANTsat%20LASC%202026/DiagramaAtividadesVANTsat.jpg)
@@ -24,8 +53,8 @@ O código segue o princípio de separação de interesses (*Separation of Concer
 
 O core analítico do projeto, atuando na extração de primitivas geométricas e orientação de navegação.
 - **Segmentação e Simplificação:** Implementa o algoritmo **Moore-Neighbor** para rastreio de contornos em buffers Grayscale e utiliza o algoritmo **Ramer-Douglas-Peucker (RDP)** para redução da dimensionalidade poligonal.
-- **Classificação Geométrica:** Identifica formas (triângulos e quadrados) primariamente através da verificação rigorosa de ângulos internos (`math.h`) e contagem de vértices, garantindo robustez na detecção.
-- **Centralização e HUD (`Center`):** Calcula o centroide da forma detectada para classificá-la em um dos quatro quadrantes de uma malha cartesiana (com margem de tolerância central de 80x60). Renderiza no próprio framebuffer um HUD visual contendo miras, eixos cartesianos e a logo da UERJsats.
+- **Classificação Geométrica:** Identifica formas (triângulos e quadrados) primariamente através da verificação rigorosa de ângulos internos, garantindo robustez na detecção.
+- **Centralização e HUD (`Center`):** Calcula o centroide da forma detectada para classificá-la em um dos quatro quadrantes de uma malha cartesiana (com margem de tolerância central de 80x60). Renderiza no próprio framebuffer contendo miras, eixos cartesianos e a logo da UERJsats.
 - **Gestão de Memória:** Aloca buffers críticos na **PSRAM** para suportar a manipulação de matrizes de imagem sem causar transbordamento da memória SRAM interna.
 
 ### 2. Gestão de Armazenamento e Logs (`StorageHandler.h/.cpp`)
@@ -57,8 +86,8 @@ Camada de persistência e serialização de dados utilizando o barramento **SPI*
 </div>
 
 Módulo responsável pela extração de dados sem fio, ativado **exclusivamente após o término da missão física** para não onerar o pipeline de controle durante o voo.
-- **Modo Access Point:** Configura o ESP32S3 como servidor (`VANTsat_AP`) com IP estático (`192.168.4.1`).
-- **Servidor Web HTTP (Porta 80):** Hospeda uma interface embarcada que consome os metadados do arquivo texto e renderiza uma galeria dinâmica (HTML/CSS) atrelando visualmente a imagem processada aos dados da telemetria correspondente.
+- **Modo Access Point:** Configura o ESP32S3 como servidor (`VANTsat_AP`) com IP estático (`192.168.4.1`). **A senha para conexão na rede WiFi é `uerjsats123`.**
+- **Servidor Web HTTP (Porta 80):** Hospeda uma interface embarcada que consome os metadados do arquivo texto e renderiza uma galeria dinâmica (HTML/CSS) atrelando visualmente a imagem processada aos dados da telemetria correspondente. **Para acessar os dados, após conectar na rede WiFi, abra a URL `http://192.168.4.1` em seu navegador ou acesse a URL `www.missao.atlas.com`**
 - **Transporte TCP (Porta 8888):** Mantém suporte legado de altíssima velocidade para entrega de fluxos binários e envio de chunks TCP sob demanda.
 
 ### 4. Controle de Voo e C2 (`CRTPSerial.h/.cpp`)
@@ -87,8 +116,8 @@ Interface de Comando e Controle que conecta diretamente a visão ao controlador 
 
 ![Diagrama de Atividade do Loop da Missão](./VANTsat_TX_V3/Imagens%20VANTsat%20LASC%202026/Firmware-Diagrama_Atividade_Loop_Missão.jpg)
 
-Ao ser alimentado, o firmware opera determinística e sequencialmente através da seguinte máquina de estados:
-1. **Sincronização (Ready to Fly):** Aguarda o *handshake* na camada física validando o pacote de *start* do controlador de voo base.
+Ao ser alimentado, o firmware opera sequencialmente através da seguinte máquina de estados:
+1. **Sincronização (Ready to Fly):** Aguarda o *handshake* na camada física validando o pacote de *start* do controlador de voo base. *(Obs: Condicional atualmente desabilitada para testes).*
 2. **Decolagem (TakeOff):** Reseta o sistema de arquivos limpando o SD (`resetMission()`) e envia o impulso inicial para ganhar altura, transmitindo os pacotes em lockstep de 50Hz.
 3. **Aquisição e Busca:** Passa a comandar modo `Hover`. Captura o buffer da câmera sequencialmente em PSRAM, buscando identificar unicamente uma geometria classificada como `TRIANGULO` ou `QUADRADO`.
 4. **Acionamento Condicional (Ação):**
